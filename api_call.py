@@ -17,7 +17,7 @@ def iterateOverResponse(dados):
 
 def writeInFile():
     for dic in allresp:
-        app_json = json.dumps(allresp)
+        app_json = json.dumps(dic)
     with open("data.json", 'a') as file:
         file.write(app_json)
     
