@@ -16,25 +16,24 @@ def iterateOverResponse(dados):
             break
         else:
             savedResponses[atributte] = value
-            savedResponses['timestamp'] = sttime
+    savedResponses['timestamp'] = sttime
 
 def writeInFile():
     for dic in allresp:
         app_json = json.dumps(dic)
-        with open("data.json", 'a') as file:
-            file.write(app_json + '\n')
+    with open("data.json", 'a') as file:
+        file.write(app_json + '\n')
         
 
 def main():
 
-    response = requests.get(api + api_trafic)
-
     while True:
+        response = requests.get(api + api_trafic)
         print("Getting response")
         iterateOverResponse(response.json())
         allresp.append(savedResponses)
         writeInFile()
-        time.sleep(900) # Delay for 15 minute (900 seconds).
+        time.sleep(600) # Delay for 15 minute (900 seconds).
 
 if __name__ == "__main__":
     main()
