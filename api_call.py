@@ -1,39 +1,34 @@
 import requests, time, json
 from datetime import datetime
 
-savedResponses = dict()
 allresp = list()
 api = "https://api.tomtom.com/traffic/services/"
 key = "MrTS8F1tctiivu5vgR5SV2ypkrFfwNFY"
-lat = "41.56067"
-lon = "-8.39609"
+lat = "41.551791086003234"
+lon = "-8.421615692790999"
 api_trafic = "4/flowSegmentData/relative0/10/json?point="+ lat +"%2C" + lon+ "&key="+ key
 
 def iterateOverResponse(dados):
     sttime = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+    savedResponses = dict()
     for atributte, value in dados['flowSegmentData'].items():
-        if atributte == 'coordinates': 
+        if atributte == 'coordinates':
             break
-        else:
+        else:            
+            savedResponses['timestamp'] = sttime
             savedResponses[atributte] = value
-    savedResponses['timestamp'] = sttime
-
-def writeInFile():
-    for dic in allresp:
-        app_json = json.dumps(dic)
+    allresp.append(savedResponses)
     with open("data.json", 'a') as file:
-        file.write(app_json + '\n')
-        
+        file.write(json.dumps(savedResponses) + '\n')
 
+  
 def main():
-
+    #print(response.json())
     while True:
+        print("Getting response")    
         response = requests.get(api + api_trafic)
-        print("Getting response")
         iterateOverResponse(response.json())
-        allresp.append(savedResponses)
-        writeInFile()
-        time.sleep(600) # Delay for 15 minute (900 seconds).
+        time.sleep(30) # Delay for 15 minute (900 seconds).
 
 if __name__ == "__main__":
     main()
