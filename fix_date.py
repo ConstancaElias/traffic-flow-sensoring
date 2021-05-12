@@ -1,6 +1,7 @@
 import csv
 import sys
-
+from datetime import datetime
+import pandas as pd
 
 def fix_date(date):
     '''
@@ -10,9 +11,13 @@ def fix_date(date):
 
     returns new date with fixed hour
     '''
+    seconds = ' '
     
-    day, time = date.split(' ')
-    hour, minutes = time.split(':')
+    date_day, time = date.split('_')
+    if len(time.split(':')) == 2:
+        hour, minutes = time.split(':')
+    else:
+        hour, minutes, seconds = time.split(':')
 
     hour_int = int(hour)
 
@@ -21,11 +26,16 @@ def fix_date(date):
     else:
         new_hour = hour_int + 1
 
+    #year, month, day = date_day.split('-')
 
-    new_date = day + ' ' + str(new_hour) + ':' + minutes
+    #new_date = day +'/' + month + '/' + year + ' ' + str(new_hour) + ':' + minutes
+    new_date = date_day + ' ' + str(new_hour) + ':' + minutes
 
+    
+    #new_datetime = datetime.strptime(new_date, '%y-%m-%d %H:%M:%S')
+
+    #return pd.to_datetime(new_date) 
     return new_date
-
 
 def main():
 
@@ -40,8 +50,6 @@ def main():
     else:
         input_filename = sys.argv[1]
         output_filename = sys.argv[2]
-        print(input_filename)
-        print(output_filename)
 
         dic = {}
 
@@ -49,14 +57,20 @@ def main():
         with open(input_filename) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
 
+
             line_count = 0
+            idx_timestamp = 0
             for row in csv_reader:
                 if line_count != 0:
-                    row[7] = fix_date(row[7])
+                    row[idx_timestamp] = fix_date(row[idx_timestamp])
                     dic[line_count] = row
                 
                 else:
                     dic[line_count] = row
+                    for i in range(len(row)):
+                        if row[i] == "timestamp":
+                            idx_timestamp = i
+                            break
 
                 line_count += 1
 
@@ -65,7 +79,6 @@ def main():
                 outputfile = csv.writer(outfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 
                 for i in range(len(dic)):
-                    print(dic[i])
                     outputfile.writerow(dic[i])
 
 
