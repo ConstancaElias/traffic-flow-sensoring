@@ -1,6 +1,6 @@
 # Traffic_Flow_Sensoring
 
- University project to measure, analyse and predict the traffic flow in Braga, Portugal.
+ University project to collect, analyse and predict the traffic flow in Braga, Portugal.
  
 ## Data Collection
 
